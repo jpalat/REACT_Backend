@@ -3,7 +3,7 @@ const cors = require('cors')
 const mysql = require('mysql')
 
 const app = express()
-const selectAll = "SELECT DATE_FORMAT(time,'%Y-%m-%d %H:%i:%S') as 'time',voltage,current,SOC,SOHR,SOHC FROM sbg";
+const selectAll = "SELECT DATE_FORMAT(time,'%Y-%m-%d %H:%i:%S') as 'time',voltage,current,estSOC as SOC ,estSOH_R as SOHR, estSOH_C as SOHC FROM sbg";
 const port = 5000
 
 const connection = mysql.createConnection({
@@ -42,7 +42,7 @@ app.get('/init', (req, res) => {
 
 app.get('/update',(req,res) => {
     const obj = req.query;
-    const updateQuery = "SELECT DATE_FORMAT(time,'%Y-%m-%d %H:%i:%S') as 'time',voltage,current,SOC,SOHR,SOHC FROM sbg WHERE time > '"+ obj.time + "'"
+    const updateQuery = "SELECT DATE_FORMAT(time,'%Y-%m-%d %H:%i:%S') as 'time',voltage,current,estSOC as SOC, estSOH_R as SOHR ,estSOH_C as SOHC FROM sbg WHERE time > '"+ obj.time + "'"
     // console.log(obj)
     // console.log(updateQuery)
     connection.query(updateQuery,(err,results)=>{
